@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,47 +11,47 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
+
         h1 {
             color: #667eea;
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 5px;
         }
-        
+
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .alert-error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
+
         .actions {
             display: flex;
             justify-content: space-between;
@@ -58,7 +59,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
@@ -68,100 +69,102 @@
             display: inline-block;
             transition: all 0.3s;
         }
-        
+
         .btn-primary {
             background-color: #667eea;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: #5568d3;
         }
-        
+
         .btn-success {
             background-color: #28a745;
             color: white;
         }
-        
+
         .btn-danger {
             background-color: #dc3545;
             color: white;
         }
-        
+
         .btn-sm {
             padding: 5px 10px;
             font-size: 14px;
         }
-        
+
         .search-form {
             display: flex;
             gap: 10px;
         }
-        
+
         .search-form input {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             flex: 1;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        
+
         th {
             background-color: #667eea;
             color: white;
         }
-        
+
         tr:hover {
             background-color: #f5f5f5;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px;
             color: #666;
         }
-        
+
         .actions-column {
             display: flex;
             gap: 5px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>📦 Product Management System</h1>
-        
+
         <!-- Success Message -->
         <div th:if="${message}" class="alert alert-success">
             <span th:text="${message}"></span>
         </div>
-        
+
         <!-- Error Message -->
         <div th:if="${error}" class="alert alert-error">
             <span th:text="${error}"></span>
         </div>
-        
+
         <!-- Actions -->
         <div class="actions">
             <a th:href="@{/products/new}" class="btn btn-primary">➕ Add New Product</a>
-            
+
             <form th:action="@{/products/search}" method="get" class="search-form">
                 <input type="text" name="keyword" th:value="${keyword}" placeholder="Search products..." />
                 <button type="submit" class="btn btn-primary">🔍 Search</button>
             </form>
         </div>
-        
+
         <!-- Products Table -->
         <div th:if="${products != null and !products.isEmpty()}">
             <table>
@@ -186,10 +189,10 @@
                         <td th:text="${product.category}">Electronics</td>
                         <td>
                             <div class="actions-column">
-                                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-success btn-sm">✏️ Edit</a>
-                                <a th:href="@{/products/delete/{id}(id=${product.id})}" 
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Are you sure you want to delete this product?')">
+                                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-success btn-sm">✏️
+                                    Edit</a>
+                                <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this product?')">
                                     🗑️ Delete
                                 </a>
                             </div>
@@ -198,11 +201,53 @@
                 </tbody>
             </table>
         </div>
-        
+
+        <div style="margin-top: 25px;">
+            <h3 style="font-weight: 600; margin-bottom: 15px;">Advanced Search</h3>
+
+            <form action="/advanced-search" method="get" style="display: flex; gap: 10px; align-items: center;">
+
+                <input type="text" name="name" placeholder="Search name..." value="${searchName}"
+                    style="padding: 8px 12px; width: 180px; border: 1px solid #ccc; border-radius: 8px;">
+
+                <input type="text" name="category" placeholder="Category..." value="${searchCategory}"
+                    style="padding: 8px 12px; width: 150px; border: 1px solid #ccc; border-radius: 8px;">
+
+                <input type="number" step="0.01" name="minPrice" placeholder="Min price" value="${searchMinPrice}"
+                    style="padding: 8px 12px; width: 120px; border: 1px solid #ccc; border-radius: 8px;">
+
+                <input type="number" step="0.01" name="maxPrice" placeholder="Max price" value="${searchMaxPrice}"
+                    style="padding: 8px 12px; width: 120px; border: 1px solid #ccc; border-radius: 8px;">
+
+                <button type="submit" style="padding: 8px 18px; background-color: #4e73df; color: white; 
+                       border: none; border-radius: 8px; cursor: pointer;">
+                    Search
+                </button>
+            </form>
+        </div>
+
+        <div style="margin-top: 20px;">
+
+            <span th:if="${totalPages > 1}">
+                <a th:if="${currentPage > 0}" th:href="@{/search(keyword=${keyword}, page=${currentPage - 1})}">
+                    Previous
+                </a>
+
+                <span>Page [[${currentPage + 1}]] / [[${totalPages}]]</span>
+
+                <a th:if="${currentPage + 1 < totalPages}"
+                    th:href="@{/search(keyword=${keyword}, page=${currentPage + 1})}">
+                    Next
+                </a>
+            </span>
+
+        </div>
+
         <!-- Empty State -->
         <div th:if="${products == null or products.isEmpty()}" class="empty-state">
             <p>No products found. Add your first product!</p>
         </div>
     </div>
 </body>
+
 </html>
